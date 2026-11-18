@@ -1,4 +1,5 @@
 pymupdf
+python-docx
 numpy
 pandas
 pyyaml

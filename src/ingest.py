@@ -20,9 +20,36 @@ def read_pdf(path: Path):
     repeated = {l for l, c in cnt.items() if len(pages) >= 4 and c > 0.5 * len(pages)}
     return ["\n".join(l for l in t.splitlines() if l.strip() not in repeated) for t in pages]
 
+def read_docx(path: Path):
+    """Đọc .docx theo đúng thứ tự đoạn văn và bảng. Word không có số trang cố định nên trả về một 'trang' duy nhất."""
+    from docx import Document
+    from docx.table import Table
+    from docx.text.paragraph import Paragraph
+    doc = Document(path)
+    lines = []
+    for child in doc.element.body.iterchildren():
+        tag = child.tag.rsplit("}", 1)[-1]
+        if tag == "p":
+            t = Paragraph(child, doc).text.strip()
+            if t:
+                lines.append(t)
+        elif tag == "tbl":
+            for row in Table(child, doc).rows:
+                cells = []
+                for c in row.cells:  # ô gộp có thể lặp lại, bỏ ô trùng liên tiếp
+                    t = c.text.strip().replace("\n", " ")
+                    if t and (not cells or cells[-1] != t):
+                        cells.append(t)
+                if cells:
+                    lines.append(" | ".join(cells))
+    return [norm("\n".join(lines))]
+
 def read_any(path: Path):
-    if path.suffix.lower() == ".pdf":
+    suffix = path.suffix.lower()
+    if suffix == ".pdf":
         return read_pdf(path)
+    if suffix == ".docx":
+        return read_docx(path)
     return [norm(path.read_text(encoding="utf-8"))]
 
 def chunk_pages(pages, size, overlap):
@@ -45,7 +72,11 @@ def chunk_pages(pages, size, overlap):
 def main(cfg_path="config.yaml"):
     cfg = yaml.safe_load(open(cfg_path, encoding="utf-8"))
     raw = Path(cfg["raw_dir"])
-    files = sorted(p for p in raw.glob("*") if p.suffix.lower() in {".pdf", ".txt", ".md"})
+    files = sorted(p for p in raw.glob("*")
+                   if p.suffix.lower() in {".pdf", ".docx", ".txt", ".md"} and not p.name.startswith("~$"))
+    old_doc = [p.name for p in raw.glob("*.doc")]
+    if old_doc:
+        print("Bỏ qua file .doc (định dạng cũ), hãy lưu thành .docx hoặc PDF:", ", ".join(old_doc))
     if not files:
         sys.exit(f"Chưa có tài liệu trong {raw}")
     n = 0

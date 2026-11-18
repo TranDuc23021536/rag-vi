@@ -7,7 +7,7 @@ So sánh ba cách truy xuất (vector, BM25, hybrid-RRF) trong hệ thống hỏ
     pip install -r requirements.txt
 
 ## Quy trình
-1. Bỏ tài liệu (PDF/TXT/MD) vào `data/raw/`.
+1. Bỏ tài liệu (PDF, DOCX, TXT, MD; file .doc cũ hãy lưu thành .docx) vào `data/raw/`.
 2. `python src/ingest.py` → tạo `data/chunks.jsonl`. **Mở file này ra đọc vài dòng** để kiểm tra mất dấu, lẫn đầu/chân trang.
 3. Soạn `data/questions.csv` theo `data/questions_template.csv`:
    - `evidence` = đoạn **nguyên văn** trong tài liệu chứa đáp án, ngắn (8–30 từ) để ít bị cắt giữa hai chunk.
