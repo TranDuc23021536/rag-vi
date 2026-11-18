@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.env
+# dữ liệu thô và cache embedding (nặng, có thể có bản quyền) — không đẩy lên GitHub
+data/raw/
+data/emb_cache/
+data/chunks.jsonl

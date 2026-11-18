@@ -1,0 +1,24 @@
+# Cấu hình thí nghiệm. Mọi cấu hình so sánh đều đọc từ đây để tái lập được.
+raw_dir: data/raw
+chunks_path: data/chunks.jsonl
+questions_path: data/questions.csv
+results_dir: results
+chunk:
+  size_words: 150      # thử thêm 100 và 250 cho thí nghiệm cỡ chunk
+  overlap_words: 30
+embedding:
+  model: intfloat/multilingual-e5-base   # có thể đổi sang BAAI/bge-m3
+  query_prefix: "query: "                # e5 cần tiền tố; bge-m3 để rỗng
+  passage_prefix: "passage: "
+  cache_dir: data/emb_cache
+bm25:
+  word_segment: true   # dùng underthesea nếu có, nếu không thì tách theo âm tiết
+hybrid:
+  rrf_k: 60
+retrieval_k: 5
+generation:
+  provider: anthropic   # anthropic | openai_compatible (Ollama, vLLM...)
+  model: ""             # ĐIỀN tên mô hình, cố định cho mọi thí nghiệm
+  temperature: 0
+  max_tokens: 500
+  base_url: ""          # chỉ dùng cho openai_compatible, vd http://localhost:11434/v1

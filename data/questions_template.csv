@@ -1,0 +1,3 @@
+id,question,answer,evidence,answerable
+q001,"<câu hỏi>","<đáp án tham chiếu>","<đoạn văn nguyên văn trong tài liệu chứa đáp án, 8-30 từ>",1
+q002,"<câu hỏi mà tài liệu KHÔNG đề cập>","",,0

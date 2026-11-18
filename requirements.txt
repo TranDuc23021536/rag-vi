@@ -1,0 +1,9 @@
+pymupdf
+numpy
+pandas
+pyyaml
+rank-bm25
+sentence-transformers
+underthesea
+anthropic
+openai
